@@ -1,9 +1,16 @@
+body{
+    background: linear-gradient(to top left, powderblue, pink);
+}
+
 #root
 {   
   display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 500px;
 }
+
+
 
 .board-lines
 {
@@ -26,10 +33,31 @@
     color: rgb(255, 255, 255);
     border: #253532 solid 1px;
     margin: 4px;
-    transition: top 0.1s linear 0s;
+}
+
+.moveAnimate
+{
+    transition: top .3s linear 0s;
+    top: 0;
+    right: 0;
+}
+
+.moveAnimateF
+{
+    transition: top .3s linear 0s;
     top: 0;
 }
 
 .boardCel:hover, .activeCel{
     transform: matrix(1.4,0,0,1.4,0,0);
+}
+
+
+.disactive{
+    pointer-events: none;
+}
+
+.hidden
+{
+ visibility: hidden;
 }
