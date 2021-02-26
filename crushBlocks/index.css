@@ -19,12 +19,15 @@
 
 .boardCel
 {
+    position: relative;
     height: 20px;
     width: 20px;
     background-color:#517f83;
     color: rgb(255, 255, 255);
     border: #253532 solid 1px;
     margin: 4px;
+    transition: top 0.1s linear 0s;
+    top: 0;
 }
 
 .boardCel:hover, .activeCel{

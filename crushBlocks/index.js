@@ -27,22 +27,89 @@ const generateBoard=(row,col,elem)=>{
 
 
 //крушение элемента
-const crushElements = (x,y,board) =>{
+const crushElements = (boardUpdate,combo) =>{
 
-    console.log(board);
-    for(let i=x;i>0;i--)
+    console.log(combo.sort());
+    const coordinates=combo.sort().map((xy)=>(xy.split('-')).map(a=>+a));
+    let columnsDie=[];
+    let removeStylesList=[];
+    console.log(columnsDie);
+    for(let i=0;i<coordinates.length;i++)
     {
-        board[i][y]=board[i-1][y];
-    }
-    board[0][y]=randomNumber(4);
-    console.log('crushElements');
-    console.log(board);
-    return board;
+        const x=coordinates[i][0],y=coordinates[i][1];
 
-    /*board[xy[0]][xy[1]]=0;
-    return board;*/
+        //избавляемся от элемента
+        boardUpdate[x][y]=false;
+        document.getElementById(combo[i]).style.visibility='hidden';
+        removeStylesList.push(combo[i]);
+        columnsDie[y] = (y in columnsDie) ? (columnsDie[y]>x? columnsDie[y]: x) : x;
+    }
+    moveElementsDown(boardUpdate,columnsDie,removeStylesList);
+    moveElementsLeft(boardUpdate,removeStylesList);
+   return removeStylesList;
 }
 
+const moveElementsLeft=(boardUpdate,removeStylesList)=>{
+    const lengthX=boardUpdate.length, lengthY=boardUpdate[0].length;
+    
+    for(let y=0;y<lengthY;y++)
+    {
+        if(!boardUpdate[lengthX][y])
+        {
+            //доделать это
+        }
+    }
+
+}
+
+//поиск "падающих" элементов
+const ifElementOnTopExist = (boardUpdate,i,j,jump) =>
+{
+    let thisI=i-jump;
+    if((thisI>=0)){
+        
+        if(boardUpdate[thisI][j]){
+           
+            console.log(jump);
+            return jump;
+        }
+        else
+        {
+            return ifElementOnTopExist(boardUpdate,i,j,(jump+1));
+        }  
+    }
+    else{
+        return false;
+    }
+}
+
+const moveElementsDown = (boardUpdate,columnsDie,removeStylesList) =>{
+    const length=boardUpdate[0].length;
+    for(let y=0;y<length;y++)
+    {
+        if(columnsDie[y]!==undefined)
+        {
+            let jump=1;
+            for(let x=columnsDie[y];x>0;x--)
+            {
+
+                jump=ifElementOnTopExist(boardUpdate,x,y,jump);
+                if(jump)
+                {
+                    const giver=x-jump;
+                    boardUpdate[x][y]=boardUpdate[giver][y];
+                    boardUpdate[giver][y]=false;
+
+                    const idElement=giver+'-'+y;
+                    document.getElementById(idElement).style.top= (jump*30)+'px';
+                    removeStylesList.push(idElement);
+                }
+                else break;
+
+            }
+        }
+    }
+}
 
 //поиск "близких" однотипных элементов ("комбинация")
 const viewSpace=(x,y,board,remove=false) =>{
@@ -52,10 +119,19 @@ const viewSpace=(x,y,board,remove=false) =>{
     if(remove)
     {
         const position=crushedElements.map(a=>a.split('-').map(b=>(+b)));
-        for(let i=0;i<position.length;i++)
+        if(crushedElements.length>1)
         {
-            board[position[i][0]][position[i][1]]=-1;
+            for(let i=0;i<position.length;i++)
+            {
+                board[position[i][0]][position[i][1]]=remove;
+            }
         }
+        else
+        {
+            board[position[0][0]][position[0][1]]=false;
+            return false;
+        }
+       
     }
     return crushedElements;
 }
@@ -87,25 +163,27 @@ const searchAll=(crushedElements,whatLook,board,position)=>{
 }
 
 //поиск всех "комбинацций"
+//ListCombo: [0],
+//ActiveElements: [1],
 const findAllCombo = (board) =>{
 
-    const boardSearch=JSON.parse(JSON.stringify(board));
-    console.log(boardSearch);
-    let listCombo=[];
-    console.log(boardSearch);
+    const boardSearch=board;
+    let listCombo=[], howManyCombos=0;
     for(let i=0;i<boardSearch.length;i++)
     {
         for(let j=0;j<boardSearch[i].length;j++)
         {
             
-            if(boardSearch[i][j]>=0)
+            if(Number.isInteger(boardSearch[i][j]))
             {
-                listCombo.push(viewSpace(i,j,boardSearch,true));
+                howManyCombos++;
+                const combos = viewSpace(i,j,boardSearch,('c'+howManyCombos))
+                if(combos) listCombo['c'+howManyCombos]=combos;
             }
         }
     }
-    console.log('ttt '+board);
-    return listCombo;
+    console.log(boardSearch);
+    return [listCombo, boardSearch];
 }
 
 //блок
@@ -114,7 +192,9 @@ function Cell(params) {
     <div className={params.active+'boardCel'}
         onClick={params.click}
         onMouseOver ={params.mouseOver}
-        onMouseOut ={params.mouseOut }>
+        onMouseOut ={params.mouseOut }
+        id={params.id}>
+        
         {params.value}
     </div>);
 }
@@ -126,54 +206,75 @@ class GmaeBoard extends React.Component{
     {
         super(props);
         this.state={
-            BoardElements: [],
-            ActiveElements: [],
-            ListCombo: []
+            BoardElements: [], //доска
+            ActiveElements: [], //матрица с комбинациями
+            ListCombo: [], //список комбинаций
+            ActiveCombo: '' //текущая выделенная комбинация
         }
     }
 
     componentDidMount(){
+        const structure = this.startGenerateBoard();  //[0] - BoardElements, [1][0] - ListCombo, [1][1]-ActiveElements
+        console.log(structure); 
 
-        this.setState({BoardElements: generateBoard(this.props.row,this.props.line,this.props.howElem)});
-        //получение всех "комбинаций" дял текущей "доски"
-        this.setState((state)=> ({ ListCombo: JSON.parse(JSON.stringify(state.BoardElements))}),
-            ()=>console.log(findAllCombo(JSON.parse(JSON.stringify(this.state.ListCombo)))));
-        
+        this.setState({
+            BoardElements: structure[0],
+            ListCombo: structure[1][0],
+            ActiveElements: structure[1][1],
+        });
     }
 
+    //стартовоя доска
+    startGenerateBoard = () =>{
+        const board = generateBoard(this.props.row,this.props.line,this.props.howElem);
+        const boardCombo = findAllCombo(JSON.parse(JSON.stringify(board)));
+        return [board,boardCombo];
+    }
+
+
     //процесс крушения
-    processingCrush = (x,y) =>
+    processingCrush = (comboIndex) =>
     {
+        this.setState({ActiveCombo:[]});
         let boardUpdate=JSON.parse(JSON.stringify(this.state.BoardElements));
-        viewSpace(x,y,boardUpdate); 
-        crushElements(x,y,boardUpdate,this.props.row,this.props.line);
-        this.setState({BoardElements: boardUpdate});
+        const combo=this.state.ListCombo[comboIndex];
+        const removeStyleList=crushElements(boardUpdate,combo);
+        const boardCombo = findAllCombo(JSON.parse(JSON.stringify(boardUpdate)));
+        this.setState({
+            BoardElements: boardUpdate,
+            ListCombo: boardCombo[0],
+            ActiveElements: boardCombo[1],
+        },
+        ()=>{
+            for(let i=0;i<removeStyleList.length;i++)
+            document.getElementById(removeStyleList[i]).removeAttribute("style");
+
+        });
     }
 
     //подсвечивание комбинации для выбранного элемента
-    selectCombo = (x,y) =>{
-        let boardUpdate=JSON.parse(JSON.stringify(this.state.BoardElements));
-        const activeEl=viewSpace(x,y,boardUpdate);
-        console.log(activeEl);
-       this.setState({ActiveElements: activeEl});
+    selectCombo = (combo) =>{
+        this.setState({ActiveCombo: combo});
     }
 
     //снятие подсвечивания комбинации
     outSelect = () =>{
-        this.setState({ActiveElements: []});
+        this.setState({ActiveCombo: []});
     }
 
     //преобразование массива в блоки
-    arrayToJsx = (arr,iRow) =>
+    arrayToJsx = (arr,iRow,ComboArray,active) =>
     {
         arr=arr.map((cel,key)=>{    
                                     const position=iRow+'-'+key;
+                                    const combo=ComboArray[iRow][key];
                                     return (
                                     <Cell value={cel} key={position} id={position}
-                                        active={this.state.ActiveElements.includes(position)? 'activeCel ':''}
-                                        click={()=>this.processingCrush(iRow,key)}
-                                        mouseOver={()=>this.selectCombo(iRow,key)}
+                                        active={(combo===active)? 'activeCel ':''}
+                                        click={()=>this.processingCrush(combo)}
+                                        mouseOver={combo? (()=>this.selectCombo(combo)) : (() => false)}
                                         mouseOut={()=>this.outSelect()}
+                                       combo={combo}
                                     />
                                     )
                                 });
@@ -182,8 +283,10 @@ class GmaeBoard extends React.Component{
 
     render(){
         let Board = JSON.parse(JSON.stringify(this.state.BoardElements));
+        const ComboArray=this.state.ActiveElements;
+        const active = this.state.ActiveCombo;
         for(let i=0;i<Board.length;i++){
-            Board[i]=this.arrayToJsx(Board[i],i);
+            Board[i]=this.arrayToJsx(Board[i],i,ComboArray,active);
         }
         
         return <div id="b">{Board}</div>;
