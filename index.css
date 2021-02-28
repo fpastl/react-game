@@ -1,0 +1,126 @@
+body{
+    background: linear-gradient(to top left, powderblue, pink);
+    text-transform: uppercase;
+}
+
+#root
+{   
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+.lines
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.Row
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.boardCel
+{
+    position: relative;
+    height: 10px;
+    width: 10px;
+    background-color:#00becf;
+    color: rgb(255, 255, 255);
+    border: #253532 solid 1px;
+    margin: 3px;
+    user-select: none; 
+}
+
+.boardCel:hover, .activeCel{
+    transform: matrix(1.4,0,0,1.4,0,0);
+}
+
+
+.disactive{
+    pointer-events: none;
+}
+
+.hidden
+{
+    visibility: hidden;
+}
+
+.buttons{
+    text-align: center;
+    background-color: rgba(247, 137, 241, 0.363);
+    color: rgb(255, 255, 255);
+    border: 2px solid rgba(82, 243, 248, 0.678);
+    margin-bottom: 5px;
+    user-select: none;     
+}
+
+.buttons:hover{
+    background-color: rgba(82, 243, 248, 0.678);
+    border: 2px solid rgba(247, 137, 241, 0.363);
+}
+
+.info{
+    color: white;
+    background-color: #00becf;
+    margin-bottom: 5px;
+    user-select: none;     
+}
+
+#MainMenu{
+    width: 100%;
+}
+
+
+#sound{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#sound label {
+ width: 30px; 
+ height: 30px; 
+ display: block; 
+ position: relative; 
+}
+
+.SoundConrol
+{
+    z-index: -1;
+    opacity: 0;
+}
+
+.SoundConrol + span {
+    position: absolute; 
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    cursor: pointer; 
+}
+
+.effect + span {
+    background: url(./img/effect_off.svg) no-repeat;
+}
+
+.effect:checked + span {
+    background: url(./img/effect_on.svg) no-repeat;
+}
+
+.music + span {
+    background: url(./img/music_off.svg) no-repeat;
+}
+
+.music:checked + span {
+    background: url(./img/music_on.svg) no-repeat;
+}
+
+.effect + span,.effect:checked + span, .music + span, .music:checked+span{
+    background-size: 100%
+}
