@@ -1,6 +1,6 @@
 'use strict';
 
-import { MainMenu, Settings, HighScores } from './main-menu.js';
+import { MainMenu, Settings, HighScores, HotKeys} from './main-menu.js';
 import { GmaeBoard } from './game.js';
 
 const playList=['Bio Unit - Aerial.mp3','Bio Unit - Fire Flies.mp3'];
@@ -33,6 +33,43 @@ class App extends React.Component {
     }
 
     componentDidMount = () =>{
+        window.addEventListener('keyup',() => this.HotKeys(event));
+    }
+
+    HotKeys=(e)=>{
+        if(e.target.tagName == 'input' || !['KeyN','KeyC','KeyS','KeyH','KeyQ','KeyK'].includes(e.code)){
+            return;
+        }
+        else
+        {
+            switch(e.code)
+            {
+                case 'KeyN':{
+                    this.ChangePage(1);
+                    break;
+                }
+                case 'KeyC':{
+                    if((localStorage.getItem('BoardElements')!==null && localStorage.getItem('Score')!==null && localStorage.getItem('Size')!==null && localStorage.getItem('Elements'))) this.ChangePage(2);
+                    break;
+                }
+                case 'KeyS':{
+                    this.ChangePage(3);
+                    break;
+                }
+                case 'KeyH':{
+                    this.ChangePage(4);
+                    break;
+                }
+                case 'KeyK':{
+                    this.ChangePage(5);
+                    break;
+                }
+                case 'KeyQ':{
+                    if(this.state.page!=0) this.ChangePage(0);
+                    break;
+                } 
+            }
+        }
     }
 
     MusicChange = (checked,sound) =>{
@@ -50,13 +87,13 @@ class App extends React.Component {
         {
             case 1:
                 {
-                const { BoardSize , Elements , Effects }=this.state;
-                return <GmaeBoard key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={this.state.Theme} load={false}/>;
+                const { BoardSize , Elements , Effects,Theme }=this.state;
+                return <GmaeBoard key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} load={false}/>;
                 }
             case 2:
                 {
-                    const { Effects }=this.state;
-                    return <GmaeBoard key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={this.state.Theme} 
+                    const { Effects,Theme }=this.state;
+                    return <GmaeBoard key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} 
                     />;
                 }
             case 3:
@@ -64,8 +101,12 @@ class App extends React.Component {
                     const {Theme,Elements,BoardSize}=this.state;
                     return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
                 }
-            case 4:
-                return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>;
+            case 4:{
+                    return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>;
+            }
+            case 5: {
+                    return <HotKeys ChangePage={this.ChangePage}/>
+                }
             default:
                 return (
                         <MainMenu ChangePage={this.ChangePage} />
@@ -91,7 +132,7 @@ class App extends React.Component {
         return (
             <React.Fragment>
             <div id='sound'>
-                { (Page==1 || Page==2)? <SoundConrol onClick={this.MusicChange} sound="effect"/> :'' }
+                { (Page==1 || Page==2)? <SoundConrol onClick={this.MusicChange} checked ={this.state.Effects} sound="effect"/> :'' }
                 <SoundConrol onClick={this.MusicChange} sound="music"/> 
             </div>
             {this.SelectPage()}
@@ -111,12 +152,12 @@ function SoundConrol(props)
         props.onClick(event.target.checked,sound);
     }
     return (<label title={sound}>
-                <input type="checkbox" onClick={Change} className={'SoundConrol '+sound}/>
+                <input checked={props.checked} type="checkbox" onClick={Change} className={'SoundConrol '+sound}/>
                 <span></span>
             </label>)
 }
 
-function Footer(props){
+function Footer(){
     return(
         <footer>
             <p>

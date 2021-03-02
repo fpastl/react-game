@@ -29,13 +29,9 @@ function EndGame(props) {
 
     const Save=()=>
     {
-        console.log(name);
-
         const ScoreListName='ScoreList'+Size[0]+'x'+Size[1];
-        console.log(ScoreListName);
 
         let ScoreList=JSON.parse(localStorage.getItem(ScoreListName));
-        console.log(ScoreList);
 
         if(ScoreList)
         {
@@ -55,7 +51,6 @@ function EndGame(props) {
         {
             ScoreList=[[name, Score]];
         }
-        console.log(ScoreList);
         localStorage.setItem(ScoreListName,JSON.stringify(ScoreList));
         localStorage.removeItem('Score');
         props.NewGame();
@@ -108,7 +103,6 @@ export class GmaeBoard extends React.Component{
         
         if(this.state.Load == this.props.load){
         const structure = this.startGenerateBoard();  //[0] - BoardElements, [1][0] - ListCombo, [1][1]-ActiveElements
-        console.log(structure); 
         if(this.props.Effects) effect_new_game.play();
         this.setState({
             BoardElements: structure[0],
@@ -123,8 +117,6 @@ export class GmaeBoard extends React.Component{
             Score=JSON.parse(localStorage.Score),
             Size=JSON.parse(localStorage.Size),
             Elements=JSON.parse(localStorage.Elements);
-            console.log('tut');
-            console.log(BoardElements);
             const boardCombo = findAllCombo(JSON.parse(JSON.stringify(BoardElements)));
             this.setState({BoardElements: BoardElements,
                             ActiveElements: boardCombo[1],
@@ -153,8 +145,6 @@ export class GmaeBoard extends React.Component{
         let boardUpdate=JSON.parse(JSON.stringify(this.state.BoardElements));
         const combo=this.state.ListCombo[comboIndex];
         const lengthCombo=combo.length;
-        console.log("lengthCombo");
-        console.log(lengthCombo);
         const removeStyleList=crushElements(boardUpdate,combo);
         const boardCombo = findAllCombo(JSON.parse(JSON.stringify(boardUpdate)));
         setTimeout(()=>{
@@ -201,10 +191,6 @@ export class GmaeBoard extends React.Component{
         return <div key={iRow} className='Row'>{arr}</div>;
     }
 
-    pageChange=(val)=>{
-       this.props.ChangePage(val);
-    }
-
     render(){
 
         const {Score, ListCombo, Size}=this.state;
@@ -222,7 +208,7 @@ export class GmaeBoard extends React.Component{
         
         
         return (<div id="b">
-                <div className='buttons' onClick={()=>this.pageChange(0)}>Go home</div>
+                <div className='buttons' onClick={()=> this.props.ChangePage(0)}>Go home</div>
                 <div className='buttons' onClick={()=>this.componentDidMount()}>new game</div>
                 <TopMenu 
                     Score={Score}

@@ -20,6 +20,7 @@ export class MainMenu extends React.Component{
                     className={'buttons'+( !save ?' notActive':'')} >Continue</div>
                 <div  onClick={()=>this.pageChange(3)} className='buttons'>Settings</div>
                 <div  onClick={()=>this.pageChange(4)} className='buttons'>high scores</div>
+                <div  onClick={()=>this.pageChange(5)} className='buttons'>hot keys</div>
             </div>
         );
     }
@@ -35,10 +36,6 @@ export class Settings extends React.Component{
                 Elements: this.props.Elements,
                 BoardSize: this.props.BoardSize
             };
-        }
-
-        pageChange = (val) =>{
-            this.props.ChangePage(val);
         }
 
         saveSettings=(val)=>{
@@ -102,7 +99,7 @@ export class Settings extends React.Component{
                     <ChangeSettings key='s3' id='s3' name='elements' value={5} inValue={5} ClassListLabel={'settingsChangerOther'} ClassListDiv={' LineBlock'} ChdeckedThis={Elements}  onChange={()=>this.settingChange('elements',5)} />
                 </div>
                 
-                <div className='buttons' onClick={()=>this.pageChange(0)}>Go home</div>
+                <div className='buttons' onClick={()=>this.props.ChangePage(0)}>Go home</div>
                 <div className='buttons' onClick={()=>this.saveSettings(0)}>save</div>
 
             </div>
@@ -141,13 +138,8 @@ export class HighScores extends React.Component{
         this.setState({Size:value});
     }
 
-    pageChange = (val)=>{
-        this.props.ChangePage(val);
-    }
-
     render(){
         const {Size}=this.state;
-        console.log(Size);
     return(
         <div id='b' className='lines'>
         <div id='size' className='Row ChangeBlock'>
@@ -156,16 +148,14 @@ export class HighScores extends React.Component{
             <ChangeSettings key='e3' id='e3' name='size' value={[20,20]} inValue={'20x20'} ClassListLabel={'settingsChangerOther'} ClassListDiv={' LineBlock'} ChdeckedThis={Size}  onChange={()=>this.changeParam([20,20])} />
         </div>
         <ResultOutput Size={Size} />
-        <div className='buttons' onClick={()=>this.pageChange(0)}>Go home</div>
+        <div className='buttons' onClick={()=> this.props.ChangePage(0)}>Go home</div>
         </div>
     );}
 }
 
 function ResultOutput(props){
     const {Size}=props;
-    console.log('ScoreList'+Size[0]+'x'+Size[1]);
     const scoreList=JSON.parse(localStorage.getItem(('ScoreList'+Size[0]+'x'+Size[1])));
-    console.log(scoreList);
     let scoreBoard=[];
     if(scoreList!=null){
         const length=scoreList.length;
@@ -199,4 +189,26 @@ function ResultRow(props){
     return (
         <tr><td>{position}</td><td>{data[0]}</td><td>{data[1]}</td></tr>
     )
+}
+
+export function HotKeys(props){
+    
+    return(
+        <div id='b' className='lines'>
+            <HotKey MenuItem='New Game' Key='n'/>
+            <HotKey MenuItem='continue' Key='c'/>
+            <HotKey MenuItem='settings' Key='s'/>
+            <HotKey MenuItem='high scores' Key='h'/>
+            <HotKey MenuItem='hot keys' Key='k'/>
+            <HotKey MenuItem='go home' Key='q'/>
+            <div className='buttons' onClick={()=> props.ChangePage(0)}>Go home</div>
+        </div>
+    );
+}
+
+function HotKey(props){
+    const {MenuItem,Key}=props;
+    return(
+        <div className='Row HK'><span className='MenuItem'>{MenuItem+':'}</span><span className='key'>{Key}</span></div>
+    );
 }

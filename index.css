@@ -54,7 +54,7 @@ body{
     visibility: hidden;
 }
 
-.buttons{
+.buttons,.MenuItem{
     text-align: center;
     background-color: rgba(255, 176, 251, 0.678);
     color: rgb(255, 255, 255);
@@ -304,3 +304,13 @@ footer{
     width: 100px;
 }
 
+.HK{
+    justify-content: space-between;
+    margin: 5px 0;
+}
+ .key{
+     min-width: 50px;
+     text-align: center;
+     border-radius: 20px;
+     background-color: rgba(0, 255, 13, 0.493);
+ }

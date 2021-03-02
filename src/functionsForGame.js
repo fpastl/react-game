@@ -10,7 +10,7 @@ export const randomNumber = (max) =>
 export const generateBoard=(row,col,elem)=>{
     row=(row>5)? row : 6;
     col=(col>5)? col : 6;
-    elem=(elem>3)? elem : 4;
+    elem=(elem>=3)? elem : 4;
     let boardEl=new Array(row);
 
     for(let i=0;i<row;i++)
@@ -28,11 +28,9 @@ export const generateBoard=(row,col,elem)=>{
 //крушение элемента
 export const crushElements = (boardUpdate,combo) =>{
 
-    console.log(combo.sort());
     const coordinates=combo.sort().map((xy)=>(xy.split('-')).map(a=>+a));
     let columnsDie=[];
     let removeStylesList=[];
-    console.log(columnsDie);
     for(let i=0;i<coordinates.length;i++)
     {
         const x=coordinates[i][0],y=coordinates[i][1];
@@ -54,10 +52,6 @@ const moveElementsLeft=(boardUpdate,removeStylesList)=>{
     let left=false;
     for(let y=0;y<lengthY;y++)
     {
-       /* let jump=1;*/
-        console.log('boardUpdate[lengthX][y]');
-        console.log(boardUpdate[lengthX][y]);
-        
         if(!boardUpdate[lengthX][y])
         {
             const jump=ifElementOnRightExist(boardUpdate,y,lengthX,1,lengthY);
@@ -83,8 +77,7 @@ const moveElementsLeft=(boardUpdate,removeStylesList)=>{
             }
         }
     }
-    console.log('rightJump');
-    console.log(boardUpdate);
+
     return left;
 }
 //поиск "сдвигающихся" вниз элементов
@@ -93,7 +86,6 @@ const ifElementOnRightExist = (boardUpdate,j,i,jump,lengthY) =>
     let thisJ=j+jump;
     if((thisJ<lengthY)){
         if(boardUpdate[i][thisJ]){
-            console.log(jump);
             return jump;
         }
         else
@@ -113,7 +105,6 @@ const ifElementOnTopExist = (boardUpdate,i,j,jump) =>
     if((thisI>=0)){
         
         if(boardUpdate[thisI][j]){
-            console.log(jump);
             return jump;
         }
         else
@@ -233,6 +224,5 @@ export const findAllCombo = (board) =>{
             }
         }
     }
-    console.log(boardSearch);
     return [listCombo, boardSearch];
 }
