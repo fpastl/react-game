@@ -1,6 +1,6 @@
 'use strict';
 
-import { MainMenu } from './main-menu.js';
+import { MainMenu, Settings } from './main-menu.js';
 import { GmaeBoard } from './game.js';
 
 const playList=['Bio Unit - Aerial.mp3','Bio Unit - Fire Flies.mp3'];
@@ -14,6 +14,10 @@ const PlayMusic =(i,music,playList) =>{
 }
 
 
+
+
+
+
 class App extends React.Component {
 
     constructor(props){
@@ -23,7 +27,8 @@ class App extends React.Component {
             Effects: false,
             BoardSize: [20,20],
             Elements: 5,
-            Page: 1 //0-main menu,1-new game,2-continue,3-settings
+            Page: 0, //0-main menu,1-new game,2-continue,3-settings
+            Theme: 'color'
         };
     }
 
@@ -46,25 +51,34 @@ class App extends React.Component {
             case 1:
                 {
                 const { BoardSize , Elements , Effects }=this.state;
-                return <GmaeBoard key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects}/>;
+                return <GmaeBoard key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={this.state.Theme} load={false}/>;
                 }
             case 2:
                 {
-                    const { BoardSize , Elements }=this.state;
-                    return <GmaeBoard key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} load={true} ChangePage={this.ChangePage} Effects={Effects}
+                    const { Effects }=this.state;
+                    return <GmaeBoard key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={this.state.Theme} 
                     />;
                 }
             case 3:
-                return <Settings ChangePage={this.ChangePage}/>;
+                {
+                    const {Theme,Elements,BoardSize}=this.state;
+                    return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
+                }
             default:
-                return <MainMenu ChangePage={this.ChangePage}/>;
+                return <MainMenu ChangePage={this.ChangePage} />;
         }
     }
 
+    SettingsChange=(Theme,Elements,BoardSize)=>{
+        this.setState({
+            Theme: Theme,
+            Elements: Elements,
+            BoardSize: BoardSize
+        });
+    }
 
     ChangePage = (page) =>
     {
-        console.log(page);
         this.setState({Page: page});
     }
 

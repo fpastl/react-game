@@ -1,6 +1,7 @@
 body{
     background: linear-gradient(to top left, powderblue, pink);
     text-transform: uppercase;
+    color: white;
 }
 
 #root
@@ -29,17 +30,18 @@ body{
 .boardCel
 {
     position: relative;
-    height: 10px;
-    width: 10px;
+    height: 11px;
+    width: 11px;
     background-color:#00becf;
     color: rgb(255, 255, 255);
     border: #253532 solid 1px;
-    margin: 3px;
+    margin: 1px;
     user-select: none; 
 }
 
 .boardCel:hover, .activeCel{
-    transform: matrix(1.4,0,0,1.4,0,0);
+    transform: matrix(1.2,0,0,1.2,0,0);
+    border: #000000 solid 1px;
 }
 
 
@@ -54,11 +56,13 @@ body{
 
 .buttons{
     text-align: center;
-    background-color: rgba(247, 137, 241, 0.363);
+    background-color: rgba(255, 176, 251, 0.678);
     color: rgb(255, 255, 255);
     border: 2px solid rgba(82, 243, 248, 0.678);
     margin-bottom: 5px;
-    user-select: none;     
+    user-select: none;  
+    width: 100%;   
+    cursor: pointer; 
 }
 
 .buttons:hover{
@@ -66,8 +70,22 @@ body{
     border: 2px solid rgba(247, 137, 241, 0.363);
 }
 
+.notActive{
+    pointer-events: none;
+    background-color: rgba(199, 199, 199, 0.575);
+    color: rgb(245, 245, 245);
+    border: 2px solid rgba(199, 199, 199, 0.575);   
+}
+
+.notActive:hover{
+    background-color: rgba(199, 199, 199, 0.575);
+    border: 2px solid rgba(199, 199, 199, 0.575);
+}
+
+
+
 .info{
-    color: white;
+    
     background-color: #00becf;
     margin-bottom: 5px;
     user-select: none;     
@@ -92,10 +110,11 @@ body{
  position: relative; 
 }
 
-.SoundConrol
+.SoundConrol,input[type=radio]
 {
-    z-index: -1;
-    opacity: 0;
+    display: none;
+   /* z-index: -1;
+    opacity: 0;*/
 }
 
 .SoundConrol + span {
@@ -121,6 +140,135 @@ body{
     background: url(./img/music_on.svg) no-repeat;
 }
 
-.effect + span,.effect:checked + span, .music + span, .music:checked+span{
+
+/*thems colors*/
+.color5{
+    background: #D79C7C;
+}
+.color1{
+    background: #6fd6ff;
+}
+.color2{
+    background: #111127;
+}
+.color3{
+    background: #37db45;
+}
+.color4{
+    background: #f381eb;
+}
+
+/*thems soc media*/
+.iconColor1{
+    background: url(./img/second_theme/github.svg) no-repeat;
+}
+.iconColor2{
+    background: url(./img/second_theme/instagram.svg) no-repeat;
+}
+.iconColor3{
+    background: url(./img/second_theme/spotify.svg) no-repeat;
+}
+.iconColor4{
+    background: url(./img/second_theme/telegram.svg) no-repeat;
+}
+.iconColor5{
+    background: url(./img/second_theme/twitter.svg) no-repeat;
+}
+
+
+/*thems soc media not color*/
+.icon1{
+    background: url(./img/third_theme/github.svg) no-repeat;
+}
+.icon2{
+    background: url(./img/third_theme/instagram.svg) no-repeat;
+}
+.icon3{
+    background: url(./img/third_theme/spotify.svg) no-repeat;
+}
+.icon4{
+    background: url(./img/third_theme/telegram.svg) no-repeat;
+}
+.icon5{
+    background: url(./img/third_theme/twitter.svg) no-repeat;
+}
+
+.effect + span,.effect:checked + span, .music + span, .music:checked+span,.iconColor1,.iconColor2,.iconColor3,.iconColor4,.iconColor5,.icon5,.icon4,.icon3,.icon2,.icon1{
     background-size: 100%
+}
+
+.settingsChangerTheme{
+
+    min-width: 400px;
+    padding: 10px 0px;
+    justify-content: center;
+    border: rgb(255, 255, 255) solid 1px;
+}
+
+.ControlChange input[type=radio]:hover + label,.ControlChange input[type=radio]:checked + label{
+    background-color: rgba(71, 252, 0, 0.459);
+    
+}
+
+.ChangeBlock{
+    background-color: rgba(0, 107, 247, 0.397);
+    margin-bottom:6px;
+    min-height: 40px;
+    position: relative;
+    justify-content: center; 
+    align-items: center; 
+       
+}
+
+.ChangeBlock label{
+    text-align: center;
+}
+.ChangeBlock input{
+    position: absolute;
+}
+.LineBlock{
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
+.LineBlock,.LineBlock label{
+    margin: 0px 5px;
+    flex-grow: 1; 
+}
+
+
+
+#endGame{
+    position: absolute;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: #00becf;
+    font-weight: bold;
+}
+
+#endGame p{
+    margin: auto;
+    text-align: center;
+}
+
+#endGame input{
+    color: white;
+    background-color: rgba(255, 176, 251, 0.678);
+    border: white solid 1px;
+    text-transform: uppercase;
+}
+#endGame input:focus{
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgb(0, 0, 0);
+    background-color: rgba(82, 243, 248, 0.678);
+}
+
+#board{
+    position: relative;
+    align-items: center;
 }

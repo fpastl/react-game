@@ -146,7 +146,7 @@ const moveElementsDown = (boardUpdate,columnsDie,removeStylesList) =>{
                     const idElement=giver+'-'+y;
                     let elem=document.getElementById(idElement);
                     elem.style.top= 0+'px';
-                    elem.style.top= (jump*18)+'px';
+                    elem.style.top= (jump*15)+'px';
                     removeStylesList.push(idElement);
                 }
                 else break;
