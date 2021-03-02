@@ -1,7 +1,7 @@
 body{
-    background: linear-gradient(to top left, powderblue, pink);
+    background: linear-gradient(to top left, rgb(12, 161, 180), rgb(119, 119, 119));
     text-transform: uppercase;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 #root
@@ -82,7 +82,9 @@ body{
     border: 2px solid rgba(199, 199, 199, 0.575);
 }
 
-
+#b{
+    min-width: 200px;
+}
 
 .info{
     
@@ -211,7 +213,7 @@ body{
 }
 
 .ChangeBlock{
-    background-color: rgba(0, 107, 247, 0.397);
+    background-color: rgba(94, 164, 255, 0.397);
     margin-bottom:6px;
     min-height: 40px;
     position: relative;
@@ -260,9 +262,11 @@ body{
     background-color: rgba(255, 176, 251, 0.678);
     border: white solid 1px;
     text-transform: uppercase;
+    max-width: 70%;
+    text-align:center;
 }
 #endGame input:focus{
-    font-weight: bold;
+    
     text-transform: uppercase;
     color: rgb(0, 0, 0);
     background-color: rgba(82, 243, 248, 0.678);
@@ -272,3 +276,22 @@ body{
     position: relative;
     align-items: center;
 }
+
+footer{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 90%;
+    margin: 0 5%;
+    padding: 10px 0;
+    }
+a{
+    color:white;
+}
+
+    .logoRs{
+        width: 100px;
+    }

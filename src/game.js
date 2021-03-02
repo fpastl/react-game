@@ -46,7 +46,7 @@ function EndGame(props) {
                     else return -1;
                 }
             );
-            if(ScoreList.length>3)
+            if(ScoreList.length>10)
             {
                 ScoreList.pop();
             }
@@ -57,6 +57,7 @@ function EndGame(props) {
         }
         console.log(ScoreList);
         localStorage.setItem(ScoreListName,JSON.stringify(ScoreList));
+        localStorage.removeItem('Score');
         props.NewGame();
 
     }

@@ -39,9 +39,11 @@ export class Settings extends React.Component{
         pageChange = (val) =>{
             this.props.ChangePage(val);
         }
-        saveSettings=()=>{
+
+        saveSettings=(val)=>{
             const {Theme,Elements,BoardSize}=this.state;
             this.props.SettingsChange(Theme,Elements,BoardSize);
+            this.props.ChangePage(val);
         }
 
         settingChange=(name,value)=>

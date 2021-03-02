@@ -65,7 +65,9 @@ class App extends React.Component {
                     return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
                 }
             default:
-                return <MainMenu ChangePage={this.ChangePage} />;
+                return (
+                        <MainMenu ChangePage={this.ChangePage} />
+                );
         }
     }
 
@@ -83,15 +85,15 @@ class App extends React.Component {
     }
 
     render(){
-        
+        const {Page }=this.state;
         return (
             <React.Fragment>
             <div id='sound'>
-                <SoundConrol onClick={this.MusicChange} sound="effect"/> 
+                { (Page==1 || Page==2)? <SoundConrol onClick={this.MusicChange} sound="effect"/> :'' }
                 <SoundConrol onClick={this.MusicChange} sound="music"/> 
             </div>
-
-                {this.SelectPage()}
+            {this.SelectPage()}
+            <Footer/>
             </React.Fragment>
         );
     }
@@ -109,6 +111,16 @@ function SoundConrol(props)
             </label>)
 }
 
+function Footer(props){
+    return(
+        <footer>
+            <p>
+                Created by <a href="https://github.com/fpastl">Stas Smoliar</a> / 2021
+            </p>
+            <a href="https://rs.school/react/" className='logoRS'><img src='./img/rs_school.svg' /></a>
+        </footer>
+    );
+}
 
 
 
