@@ -208,6 +208,8 @@ body{
 }
 
 .ControlChange input[type=radio]:hover + label,.ControlChange input[type=radio]:checked + label{
+    user-select: none;    
+    cursor: pointer; 
     background-color: rgba(71, 252, 0, 0.459);
     
 }
@@ -219,7 +221,7 @@ body{
     position: relative;
     justify-content: center; 
     align-items: center; 
-       
+    user-select: none;        
 }
 
 .ChangeBlock label{
@@ -277,6 +279,11 @@ body{
     align-items: center;
 }
 
+tr td{
+    text-align: center;
+    user-select: none; 
+}
+
 footer{
     display: flex;
     align-items: center;
@@ -288,10 +295,12 @@ footer{
     margin: 0 5%;
     padding: 10px 0;
     }
-a{
+
+    a{
     color:white;
 }
 
-    .logoRs{
-        width: 100px;
-    }
+.logoRs{
+    width: 100px;
+}
+

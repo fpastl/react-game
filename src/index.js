@@ -1,6 +1,6 @@
 'use strict';
 
-import { MainMenu, Settings } from './main-menu.js';
+import { MainMenu, Settings, HighScores } from './main-menu.js';
 import { GmaeBoard } from './game.js';
 
 const playList=['Bio Unit - Aerial.mp3','Bio Unit - Fire Flies.mp3'];
@@ -64,6 +64,8 @@ class App extends React.Component {
                     const {Theme,Elements,BoardSize}=this.state;
                     return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
                 }
+            case 4:
+                return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>;
             default:
                 return (
                         <MainMenu ChangePage={this.ChangePage} />
@@ -99,6 +101,9 @@ class App extends React.Component {
     }
 }
 
+
+
+
 function SoundConrol(props)
 {
     const {sound} = props;
@@ -121,9 +126,6 @@ function Footer(props){
         </footer>
     );
 }
-
-
-
 
 ReactDOM.render(
     <App/>,
