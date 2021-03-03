@@ -149,8 +149,17 @@ const moveElementsDown = (boardUpdate,columnsDie,removeStylesList) =>{
 
 
 export const clearAnimation=(removeStyleList)=>{
+    if(removeStyleList){
     for(let i=0;i<removeStyleList.length;i++){
         document.getElementById(removeStyleList[i]).removeAttribute("style");}
+    }
+    else{
+        const styledElements=document.querySelectorAll('#board .boardCel[style]');
+        if(styledElements) {
+            for(let elem of styledElements){ 
+                elem.removeAttribute("style");
+        }}
+    }
 }
 
 //поиск "близких" однотипных элементов ("комбинация")
