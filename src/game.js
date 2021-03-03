@@ -104,6 +104,7 @@ export class GmaeBoard extends React.Component{
     updateBoard = () =>{
 
         if(this.state.Load == this.props.load){
+            clearAnimation();
             this.clearTimers();
             document.getElementById('board').classList.remove('disactive');
             const structure = this.startGenerateBoard();  //[0] - BoardElements, [1][0] - ListCombo, [1][1]-ActiveElements
