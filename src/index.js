@@ -13,11 +13,6 @@ const PlayMusic =(i,music,playList) =>{
     music.onended=()=>PlayMusic(current+1,music,playList);
 }
 
-
-
-
-
-
 class App extends React.Component {
 
     constructor(props){
@@ -141,9 +136,6 @@ class App extends React.Component {
         );
     }
 }
-
-
-
 
 function SoundConrol(props)
 {
