@@ -98,14 +98,14 @@ body{
 }
 
 
-#sound{
+#controls{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-#sound label {
+#controls label {
  width: 30px; 
  height: 30px; 
  display: block; 
@@ -142,6 +142,13 @@ body{
     background: url(./img/music_on.svg) no-repeat;
 }
 
+.screen + span {
+    background: url(./img/fullscreen.svg) no-repeat;
+}
+
+.screen:checked + span {
+    background: url(./img/fullscreen_exit.svg) no-repeat;
+}
 
 /*thems colors*/
 .color5{
@@ -195,7 +202,7 @@ body{
     background: url(./img/third_theme/twitter.svg) no-repeat;
 }
 
-.effect + span,.effect:checked + span, .music + span, .music:checked+span,.iconColor1,.iconColor2,.iconColor3,.iconColor4,.iconColor5,.icon5,.icon4,.icon3,.icon2,.icon1{
+.effect + span,.effect:checked + span, .music + span, .music:checked+span,.iconColor1,.iconColor2,.iconColor3,.iconColor4,.iconColor5,.icon5,.icon4,.icon3,.icon2,.icon1, .screen + span, .screen:checked+span{
     background-size: 100%
 }
 

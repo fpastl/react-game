@@ -122,13 +122,38 @@ class App extends React.Component {
         this.setState({Page: page});
     }
 
+    ScreenChange = (checked) =>{
+       const element=document.documentElement;
+        if(checked) {
+            if(element.requestFullscreen) {
+                element.requestFullscreen();
+              } else if(element.webkitrequestFullscreen) {
+                element.webkitRequestFullscreen();
+              } else if(element.mozRequestFullscreen) {
+                element.mozRequestFullScreen();
+              }
+        }
+        else {
+            if(document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } 
+            else if(document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } 
+            else if(document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        }
+    }
+
     render(){
         const {Page }=this.state;
         return (
             <React.Fragment>
-            <div id='sound'>
-                { (Page==1 || Page==2)? <SoundConrol onClick={this.MusicChange} checked ={this.state.Effects} sound="effect"/> :'' }
-                <SoundConrol onClick={this.MusicChange} sound="music"/> 
+            <div id='controls'>
+                <MiniControls onClick={this.ScreenChange} PrivatClass="screen"/>
+                { (Page==1 || Page==2)? <MiniControls onClick={this.MusicChange} checked ={this.state.Effects} PrivatClass="effect"/> :'' }
+                <MiniControls onClick={this.MusicChange} PrivatClass="music"/> 
             </div>
             {this.SelectPage()}
             <Footer/>
@@ -137,14 +162,14 @@ class App extends React.Component {
     }
 }
 
-function SoundConrol(props)
+function MiniControls(props)
 {
-    const {sound} = props;
+    const {PrivatClass} = props;
     const Change=(event)=>{
-        props.onClick(event.target.checked,sound);
+        props.onClick(event.target.checked,PrivatClass);
     }
-    return (<label title={sound}>
-                <input checked={props.checked} type="checkbox" onClick={Change} className={'SoundConrol '+sound}/>
+    return (<label title={PrivatClass}>
+                <input checked={props.checked} type="checkbox" onClick={Change} className={'SoundConrol '+PrivatClass}/>
                 <span></span>
             </label>)
 }
