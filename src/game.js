@@ -171,7 +171,6 @@ export class GmaeBoard extends React.Component{
         const removeStyleList=crushElements(boardUpdate,combo);
         const boardCombo = findAllCombo(JSON.parse(JSON.stringify(boardUpdate)));
         this.updateTimer=setTimeout(()=>{
-                    console.log('work');
                     clearAnimation(removeStyleList[0]);
                     if(removeStyleList[1] && this.props.Effects) effect_second.play();
                     if(!this.state.Autoplay) document.getElementById('board').classList.remove('disactive');
@@ -182,9 +181,6 @@ export class GmaeBoard extends React.Component{
                                 ActiveCombo:[],
                                 Score: +state.Score+(+this.calculateScore(lengthCombo))}),()=>this.SaveGame());
         },300);
-        console.log('crusher');
-        console.log(this.updateTimer);
-
     }
 
     //подсвечивание комбинации для выбранного элемента
