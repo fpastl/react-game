@@ -1,17 +1,14 @@
-'use strict';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import { MainMenu, Settings, HighScores, HotKeys} from './main-menu.js';
-import { GmaeBoard } from './game.js';
-
-const playList=['Bio Unit - Aerial.mp3','Bio Unit - Fire Flies.mp3'];
-var music=new Audio(); 
-
-const PlayMusic =(i,music,playList) =>{
-    const current=i%playList.length;
-    music.src='./music/'+playList[current];
-    music.play();
-    music.onended=()=>PlayMusic(current+1,music,playList);
-}
+import { HotKeys } from './components/HotKeys';
+import { HighScores } from './components/HighScores';
+import { Game } from './components/Game';
+import { Footer } from './components/Footer';
+import { MainMenu } from './components/MainMenu';
+import { Settings } from './components/Settings';
+import { MiniControls } from './components/MiniControls';
+import { BGMusic } from './components/files'
 
 class App extends React.Component {
 
@@ -24,53 +21,47 @@ class App extends React.Component {
             Elements: 5,
             Page: 0, //0-main menu,1-new game,2-continue,3-settings
             Theme: 'color'
-        };
+        };     
     }
 
-    componentDidMount = () =>{
+    componentDidMount(){
         window.addEventListener('keyup',() => this.HotKeys(event));
     }
 
     HotKeys=(e)=>{
-        if(e.target.tagName == 'input' || !['KeyN','KeyC','KeyS','KeyH','KeyQ','KeyK'].includes(e.code)){
+        const hotKeysSwitcher={
+            KeyN:()=>{
+                this.ChangePage(1);
+            },
+            KeyC:()=>{
+                if((localStorage.getItem('BoardElements')!==null && localStorage.getItem('Score')!==null && localStorage.getItem('Size')!==null && localStorage.getItem('Elements'))) this.ChangePage(2);
+            },
+            KeyS:()=>{
+                this.ChangePage(3);
+            },
+            KeyH:()=>{
+                this.ChangePage(4);
+            },
+            KeyK:()=>{
+                this.ChangePage(5);
+            },
+            KeyQ:()=>{
+                if(this.state.page!=0) this.ChangePage(0);
+            } 
+        };
+        if(e.target.tagName == 'INPUT' || !hotKeysSwitcher.hasOwnProperty(e.code)){
             return;
         }
         else
         {
-            switch(e.code)
-            {
-                case 'KeyN':{
-                    this.ChangePage(1);
-                    break;
-                }
-                case 'KeyC':{
-                    if((localStorage.getItem('BoardElements')!==null && localStorage.getItem('Score')!==null && localStorage.getItem('Size')!==null && localStorage.getItem('Elements'))) this.ChangePage(2);
-                    break;
-                }
-                case 'KeyS':{
-                    this.ChangePage(3);
-                    break;
-                }
-                case 'KeyH':{
-                    this.ChangePage(4);
-                    break;
-                }
-                case 'KeyK':{
-                    this.ChangePage(5);
-                    break;
-                }
-                case 'KeyQ':{
-                    if(this.state.page!=0) this.ChangePage(0);
-                    break;
-                } 
-            }
+            hotKeysSwitcher[e.code]();
         }
     }
 
     MusicChange = (checked,sound) =>{
         if(sound=="music") {
-            if(checked) PlayMusic(0,music,playList);
-            else music.pause();
+            if(checked) BGMusic.Play(0);
+            else BGMusic.Pause();
             this.setState({Sound: checked})
         }
         else this.setState({Effects: checked})
@@ -78,35 +69,37 @@ class App extends React.Component {
 
     SelectPage = () =>
     {
-        switch(this.state.Page)
-        {
-            case 1:
-                {
+        const pageSwitcher=[
+            //0
+            ()=>{
+                return <MainMenu ChangePage={this.ChangePage} />
+            },
+            //1
+            ()=>{
                 const { BoardSize , Elements , Effects,Theme }=this.state;
-                return <GmaeBoard key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} load={false}/>;
-                }
-            case 2:
-                {
-                    const { Effects,Theme }=this.state;
-                    return <GmaeBoard key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} 
+                return <Game key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} load={false}/>;
+            },
+            //2
+            ()=>{
+                 const { Effects,Theme }=this.state;
+                 return <Game key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} 
                     />;
-                }
-            case 3:
-                {
-                    const {Theme,Elements,BoardSize}=this.state;
-                    return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
-                }
-            case 4:{
-                    return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>;
-            }
-            case 5: {
-                    return <HotKeys ChangePage={this.ChangePage}/>
-                }
-            default:
-                return (
-                        <MainMenu ChangePage={this.ChangePage} />
-                );
-        }
+            },
+            //3
+            ()=>{
+                const {Theme,Elements,BoardSize}=this.state;
+                return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
+            },
+            //4
+            ()=>{
+                return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>
+            },
+            //5
+            ()=>{
+                return <HotKeys ChangePage={this.ChangePage}/>
+            }, 
+        ];
+       return pageSwitcher[this.state.Page](); 
     }
 
     SettingsChange=(Theme,Elements,BoardSize)=>{
@@ -162,28 +155,6 @@ class App extends React.Component {
     }
 }
 
-function MiniControls(props)
-{
-    const {PrivatClass} = props;
-    const Change=(event)=>{
-        props.onClick(event.target.checked,PrivatClass);
-    }
-    return (<label title={PrivatClass}>
-                <input checked={props.checked} type="checkbox" onClick={Change} className={'SoundConrol '+PrivatClass}/>
-                <span></span>
-            </label>)
-}
-
-function Footer(){
-    return(
-        <footer>
-            <p>
-                Created by <a href="https://github.com/fpastl">Stas Smoliar</a> / 2021
-            </p>
-            <a href="https://rs.school/react/" className='logoRS'><img src='./img/rs_school.svg' /></a>
-        </footer>
-    );
-}
 
 ReactDOM.render(
     <App/>,
