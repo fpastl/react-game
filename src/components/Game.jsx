@@ -1,73 +1,11 @@
-'use strict';
+import React from 'react';
+import GameCell from './GameCell';
+import GameEnd from './GameEnd';
+import GameTopMenu from './GameTopMenu';
+import { effect_crush, effect_new_game, effect_move } from './files';
+import {findAllCombo, clearAnimation, crushElements, generateBoard, randomNumber} from './functionsForGame';
 
-import {findAllCombo, clearAnimation, crushElements, generateBoard, randomNumber} from './functionsForGame.js';
-
-var effect=new Audio('./music/effect.mp3');
-var effect_second=new Audio('./music/effect_second.mp3');
-var effect_new_game=new Audio('./music/effect_new_game.mp3');
-//блок
-function Cell(params) {
-    return (
-    <div className={params.class+' boardCel'}
-        onClick={params.click}
-        onMouseOver ={params.mouseOver}
-        onMouseOut ={params.mouseOut }
-        id={params.id}></div>);
-}
-
-function EndGame(props) {
-    
-    const [name,setName]=React.useState('NAME');
-    const {Size, Score}=props;
-
-    const changeName = (e) =>
-    {
-        let inputName=e.target.value;
-        inputName=inputName? inputName: 'NAME';
-        setName(inputName);
-    }
-
-    const Save=()=>
-    {
-        const ScoreListName='ScoreList'+Size[0]+'x'+Size[1];
-
-        let ScoreList=JSON.parse(localStorage.getItem(ScoreListName));
-
-        if(ScoreList)
-        {
-            ScoreList.push([name, Score]);
-            ScoreList.sort(
-                (a,b)=>{
-                    if(+a[1]>(+b[1])) return -1;
-                    else return 1;
-                }
-            );
-            if(ScoreList.length>10)
-            {
-                ScoreList.pop();
-            }
-        }
-        else
-        {
-            ScoreList=[[name, Score]];
-        }
-        localStorage.setItem(ScoreListName,JSON.stringify(ScoreList));
-        localStorage.removeItem('Score');
-        props.NewGame();
-
-    }
-    return (
-        <div id='endGame' className='lines'>
-            <p>moves are over</p>
-            <p>your score: {Score}</p>
-            <p>your name:<input maxLength='7' id='endGameName' placeholder='name' onChange={changeName}/> </p>
-            <div className='buttons' onClick={()=>Save()}>save</div>
-        </div>
-    );
-}
-
-//"доска" с блоками
-export class GmaeBoard extends React.Component{
+export class Game extends React.Component{
 
     constructor(props)
     {
@@ -135,7 +73,7 @@ export class GmaeBoard extends React.Component{
     }
 
 
-    componentDidMount=()=>{
+    componentDidMount(){
         this.AutoGameTimer=0;
         this.updateTimer=0;
         this.updateBoard();
@@ -162,7 +100,7 @@ export class GmaeBoard extends React.Component{
     //процесс крушения
     processingCrush = (comboIndex) =>
     {
-        if(this.props.Effects) effect.play();
+        if(this.props.Effects) effect_crush.play();
         document.getElementById('board').classList.add('disactive');
 
         let boardUpdate=JSON.parse(JSON.stringify(this.state.BoardElements));
@@ -172,7 +110,7 @@ export class GmaeBoard extends React.Component{
         const boardCombo = findAllCombo(JSON.parse(JSON.stringify(boardUpdate)));
         this.updateTimer=setTimeout(()=>{
                     clearAnimation(removeStyleList[0]);
-                    if(removeStyleList[1] && this.props.Effects) effect_second.play();
+                    if(removeStyleList[1] && this.props.Effects) effect_move.play();
                     if(!this.state.Autoplay) document.getElementById('board').classList.remove('disactive');
                             this.setState((state)=>({
                                 BoardElements: boardUpdate,
@@ -201,7 +139,7 @@ export class GmaeBoard extends React.Component{
                                     const position=iRow+'-'+key;
                                     const combo=ComboArray[iRow][key];
                                     return (
-                                    <Cell key={position} id={position}
+                                    <GameCell key={position} id={position}
                                         class={theme+cel+' '+ (!cel ? 'hidden ': ((combo===active)? 'activeCel ':''))}
                                         
                                         click={combo? ()=>this.processingCrush(combo): (() => false)}
@@ -273,10 +211,10 @@ export class GmaeBoard extends React.Component{
                                                 this.autoPlay()})}}>
                                                 { Autoplay? 'stop autoplay': 'autoplay'}
                                                 </div>
-                <TopMenu Score={Score} ComboCount={ComboCount}/>
+                <GameTopMenu Score={Score} ComboCount={ComboCount}/>
                     <div id='board' className='lines'>
                         {Board}
-                        { ComboCount ? '' : <EndGame Score={Score} Size={Size} NewGame={this.updateBoard}/> }
+                        { ComboCount ? '' : <GameEnd Score={Score} Size={Size} NewGame={this.updateBoard}/> }
                     </div>
                 </div>);
     }
@@ -284,11 +222,3 @@ export class GmaeBoard extends React.Component{
 
 } 
 
-function TopMenu(props){
-    return (
-        <div className='info'>
-            <div>Score: {props.Score} </div>
-            <div>available moves: {props.ComboCount}</div>
-        </div>);
-
-}
