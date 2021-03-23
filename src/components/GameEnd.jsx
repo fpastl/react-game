@@ -22,10 +22,7 @@ export default function GameEnd(props) {
         {
             ScoreList.push([name, Score]);
             ScoreList.sort(
-                (a,b)=>{
-                    if(+a[1]>(+b[1])) return -1;
-                    else return 1;
-                }
+                (a,b)=>{+a[1]>(+b[1])? -1 : 1;}
             );
             if(ScoreList.length>10)
             {

@@ -10,6 +10,17 @@ export class Settings extends React.Component{
             Elements: this.props.Elements,
             BoardSize: this.props.BoardSize
         };
+        this.customization={
+            theme: (value)=>{
+                this.setState({Theme: value});
+            },
+            size: (value)=>{
+                this.setState({BoardSize: value});
+            },
+            elements: (value)=>{
+                this.setState({Elements: value});
+            },
+        };
     }
 
     saveSettings=(val)=>{
@@ -20,24 +31,7 @@ export class Settings extends React.Component{
 
     settingChange=(name,value)=>
     {
-        switch(name)
-        {
-            case 'theme':
-            {
-                this.setState({Theme: value});
-                break;
-            }
-            case 'size':
-            {
-                this.setState({BoardSize: value});
-                break;
-            }
-            case 'elements':
-            {
-                this.setState({Elements: value});
-                break;
-            }
-        }
+       this.customization[name](value);
     }
 
     render()

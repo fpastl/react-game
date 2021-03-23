@@ -202,9 +202,9 @@ export class Game extends React.Component{
         }
         
         
-        return (<div id="b">
+        return (<div id="GameSpace">
                 <div className='buttons' onClick={()=> this.props.ChangePage(0)}>Go home</div>
-                <div className='buttons' onClick={()=>this.updateBoard()}>new game</div>
+                <div className='buttons' onClick={this.updateBoard}>new game</div>
                 <div className='buttons' 
                 onClick={()=>{this.setState((state)=>({Autoplay:!state.Autoplay}),
                                             ()=>{document.getElementById('board').classList.add('disactive');

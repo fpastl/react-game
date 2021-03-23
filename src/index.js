@@ -21,10 +21,40 @@ class App extends React.Component {
             Elements: 5,
             Page: 0, //0-main menu,1-new game,2-continue,3-settings
             Theme: 'color'
-        };     
+        };    
+        this._pageSwitcher=[
+            //0
+            ()=>{
+                return <MainMenu ChangePage={this.ChangePage} />
+            },
+            //1
+            ()=>{
+                const { BoardSize , Elements , Effects,Theme }=this.state;
+                return <Game key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} load={false}/>;
+            },
+            //2
+            ()=>{
+                 const { Effects,Theme }=this.state;
+                 return <Game key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} 
+                    />;
+            },
+            //3
+            ()=>{
+                const {Theme,Elements,BoardSize}=this.state;
+                return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
+            },
+            //4
+            ()=>{
+                return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>
+            },
+            //5
+            ()=>{
+                return <HotKeys ChangePage={this.ChangePage}/>
+            }, 
+        ];
     }
 
-    componentDidMount(){
+    componentDidMount(){  
         window.addEventListener('keyup',() => this.HotKeys(event));
     }
 
@@ -69,37 +99,7 @@ class App extends React.Component {
 
     SelectPage = () =>
     {
-        const pageSwitcher=[
-            //0
-            ()=>{
-                return <MainMenu ChangePage={this.ChangePage} />
-            },
-            //1
-            ()=>{
-                const { BoardSize , Elements , Effects,Theme }=this.state;
-                return <Game key='board' row={BoardSize[0]} line={BoardSize[1]} howElem={Elements} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} load={false}/>;
-            },
-            //2
-            ()=>{
-                 const { Effects,Theme }=this.state;
-                 return <Game key='board' load={true} ChangePage={this.ChangePage} Effects={Effects} theme={Theme} 
-                    />;
-            },
-            //3
-            ()=>{
-                const {Theme,Elements,BoardSize}=this.state;
-                return <Settings ChangePage={this.ChangePage} Theme={Theme} Elements={Elements} BoardSize={BoardSize} SettingsChange={this.SettingsChange} />;
-            },
-            //4
-            ()=>{
-                return <HighScores Size={this.state.BoardSize} ChangePage={this.ChangePage}/>
-            },
-            //5
-            ()=>{
-                return <HotKeys ChangePage={this.ChangePage}/>
-            }, 
-        ];
-       return pageSwitcher[this.state.Page](); 
+        return this._pageSwitcher[this.state.Page](); 
     }
 
     SettingsChange=(Theme,Elements,BoardSize)=>{

@@ -8,6 +8,6 @@ export function MiniControls(props)
     }
     return (<label title={PrivatClass}>
                 <input checked={props.checked} type="checkbox" onChange={Change} className={'SoundConrol '+PrivatClass}/>
-                <span></span>
+                <span/>
             </label>)
 }

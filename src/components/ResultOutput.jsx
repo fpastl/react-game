@@ -10,19 +10,19 @@ export default function ResultOutput(props){
         const length=scoreList.length;
         for(let i=0;i<length;i++)
         {
-            scoreBoard[i]=<ResultRow data={scoreList[i]} position={i+1} />
+            scoreBoard[i]=<ResultRow key={i} data={scoreList[i]} position={i+1} />
         }
         if(length<10){
             for(let i=length;i<10;i++)
             {
-                scoreBoard[i]=<ResultRow data={['aaa','0000']} position={i+1} />
+                scoreBoard[i]=<ResultRow key={i} data={['aaa','0000']} position={i+1} />
             }
         }
     }
     else{
         for(let i=0;i<10;i++)
             {
-                scoreBoard[i]=<ResultRow data={['aaa','0000']} position={i+1} />
+                scoreBoard[i]=<ResultRow key={i} data={['aaa','0000']} position={i+1} />
             } 
     }
     return (
